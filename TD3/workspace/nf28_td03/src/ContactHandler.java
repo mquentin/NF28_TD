@@ -38,7 +38,8 @@ public class ContactHandler extends DefaultHandler {
 						System.out.println("Parse un contact dans "+ localName);
 						category.add(new DefaultMutableTreeNode(contact));
 					}
-				}else{
+				}else if(!localName.equals("nom") && !localName.equals("mail") && !localName.equals("icone")){
+					System.out.println("Creer category "+localName);
 					category = new DefaultMutableTreeNode(localName);
 					root.add(category);
 					inCategory = true;
@@ -56,6 +57,7 @@ public class ContactHandler extends DefaultHandler {
 		}else if(localName.equals("icone")){
 			contact.setIcon(buffer.toString());
 		}else if(!localName.equals("contact")){
+			System.out.println("Ajoute category "+qName);
 			inCategory = false;
 		}else{
 			System.out.println(contact.infoToString());
@@ -76,6 +78,7 @@ public class ContactHandler extends DefaultHandler {
 	public void startDocument() throws SAXException {
 		System.out.println("DŽbut du parsing");
 	}
+	
 	
 	//fin du parsing
 	public void endDocument() throws SAXException {

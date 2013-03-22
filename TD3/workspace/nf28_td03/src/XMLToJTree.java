@@ -10,7 +10,9 @@ public class XMLToJTree {
 		String src = "xml_src.xml";
 		ContactFacility cf = new ContactFacility();
 		try {
-			cf.parse(src);
+			ContactTreeModel c=cf.parse(src);
+			String s=c.toXML();
+			System.out.println("Result : "+s);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (SAXException e) {
