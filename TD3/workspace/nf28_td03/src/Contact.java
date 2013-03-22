@@ -29,7 +29,8 @@ public class Contact {
 		icon = i;
 	}
 	public String toString(){
-		return nom;
+//		return nom;
+		return "<contact>\n<nom>"+ nom + "</nom>\n<mail>" + mail +"</mail>\n<icone>"+ icon+ "</icone>\n</contact>";
 	}
 	public String infoToString(){
 		return "<nom>"+ nom + "</nom>\n<mail>" + mail +"</mail>\n<icone>"+ icon+ "</icone>";

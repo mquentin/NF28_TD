@@ -24,7 +24,7 @@ public class ContactHandler extends DefaultHandler {
 	//détection de début de balise
 	public void startElement(String uri, String localName, String qName, Attributes attributes) 
 			throws SAXException{
-				System.out.println("Début de balise: "+localName);
+				System.out.println("Debut de balise: "+localName);
 				if(localName.equals("contacts")){
 					System.out.println("debut du parsing");
 					root = new DefaultMutableTreeNode(localName);
@@ -32,7 +32,7 @@ public class ContactHandler extends DefaultHandler {
 				}else if(localName.equals("contact")){
 					contact = new Contact();
 					if(!inCategory){
-						System.out.println("Parse un contact à la racine");
+						System.out.println("Parse un contact ‡ la racine");
 						root.add(new DefaultMutableTreeNode(contact));
 					}else{
 						System.out.println("Parse un contact dans "+ localName);
@@ -76,7 +76,8 @@ public class ContactHandler extends DefaultHandler {
 
 	//début du parsing
 	public void startDocument() throws SAXException {
-		System.out.println("Début du parsing");
+		System.out.println("De" +
+				"but du parsing");
 	}
 	
 	

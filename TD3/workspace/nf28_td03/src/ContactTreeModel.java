@@ -16,21 +16,17 @@ public class ContactTreeModel extends DefaultTreeModel{
 		if(!root.isLeaf()){
 			for(int i=0;i<root.getChildCount();i++){
 				TreeNode tn = root.getChildAt(i);
-				xml.append("\n1<" + tn.toString() + ">");
+				String value= tn.toString();
+								
+				if(value.contains("<contact>")) xml.append("\n" + value);
+				else xml.append("\n<" + value + ">");
 				
 				for(int j=0;j<tn.getChildCount();j++){
-					
-					try{
-						Contact c=(Contact)tn.getChildAt(j);
-						xml.append("\n2<" + c.infoToString() + ">");
-					}catch(Exception e){
-						xml.append("\n2 Pb cast "+tn.getChildAt(j).toString());
-					}
-					
-					
+					xml.append("\n"+tn.getChildAt(j).toString());
 				}
 				
-				xml.append("\n1</" + tn.toString() + ">");
+				if(!value.contains("<contact>")) xml.append("\n</" + value + ">");
+				
 			}
 			
 		}
@@ -43,7 +39,8 @@ public class ContactTreeModel extends DefaultTreeModel{
 		for (Enumeration<TreeNode> e = node.children(); e.hasMoreElements();){
 //			if(!((TreeNode) e).isLeaf())
 		}
-		       
+		  
+		
 			//System.out.println(e.nextElement());
 		return output.toString();
 		
