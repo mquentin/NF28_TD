@@ -13,7 +13,7 @@ public class XMLToJTree {
 //			String s=c.toXML();
 //			System.out.println("\nResult toXML() : \n" + s);
 //			
-		new XMLView();
+		new AppView();
 
 	}
 
