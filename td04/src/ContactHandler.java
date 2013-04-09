@@ -6,7 +6,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 
 public class ContactHandler extends DefaultHandler {
-	private DefaultMutableTreeNode root;
+	public DefaultMutableTreeNode root;
 	private DefaultMutableTreeNode category;
 	
 	private Contact contact;

@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.Hashtable;
 
 import javax.swing.BorderFactory;
@@ -64,15 +65,20 @@ public class AppView extends JFrame {
 	
 	JTextField inputNom = new JTextField("");
 	JTextField inputMail = new JTextField("");
-	ImageIcon inputImage = new ImageIcon();
+	
+	ImageIcon inputImage = new ImageIcon("img3.jpg");
+	JLabel inputLabelImage = new JLabel(inputImage);
+	
+	JButton buttonImage = new JButton("Image");
+	JButton buttonSubmit = new JButton("Valider");
 	
 	JTree mTree;
-	JTextArea mArea=new JTextArea("coucou");
+	JTextArea mArea=new JTextArea("");
 	ContactFacility mContactFacility=new ContactFacility();
 	
 	String mFileOpen;
 	
-	DefaultMutableTreeNode root = new DefaultMutableTreeNode("Racine");
+	DefaultMutableTreeNode root = new DefaultMutableTreeNode("Default");
 
 	class MenuListener implements ActionListener {
 		JFrame mParent;
@@ -81,6 +87,7 @@ public class AppView extends JFrame {
 		}
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
+			System.out.println("actionPerformed="+arg0.getSource());
 			if(arg0.getSource() == mOuvrir){
 				System.out.append("Ouvrir");
 				final JFileChooser fc = new JFileChooser();
@@ -89,10 +96,13 @@ public class AppView extends JFrame {
 		            File file = fc.getSelectedFile();
 		            System.out.append("Opening: " + file.getName() + ".\n");
 		            try {
-		            	mTreeModel=mContactFacility.parse(file.getAbsolutePath());
-		            	root.add((MutableTreeNode) mTreeModel.getRoot());
-		            	mArea.setText(mTreeModel.toXML());
-		            	mFileOpen=file.getAbsolutePath();
+		            	if(file.getName().contains(".xml")){
+		            		mTreeModel=mContactFacility.parse(file.getAbsolutePath());
+			            	mTree.setModel(mTreeModel);
+			            	mArea.setText(mTreeModel.toXML());
+			            	mFileOpen=file.getAbsolutePath();
+		            	}
+		            	else System.out.append("The system needs XML file\n");
 		            	
 					} catch (FileNotFoundException e) {
 						e.printStackTrace();
@@ -146,12 +156,74 @@ public class AppView extends JFrame {
 				
 				
 			}else if(arg0.getSource() == mAjouter){
-				System.out.append("\nAjout d'un contact");
-				
+				System.out.append("\nAjout d'un contact : ");
+				Contact contact=new Contact("anonyme","anonyme",null);
+				DefaultMutableTreeNode node=new DefaultMutableTreeNode(contact);
+				System.out.append("\nroot : "+mTreeModel.getRoot().toString());
+				((DefaultMutableTreeNode) mTreeModel.getRoot()).add(node);
+				mTreeModel.reload();
+				//mTree.setModel(mTreeModel);
+				System.out.append(contact.getNom()+"\n");
+				mArea.setText(mTreeModel.toXML());
+			}
+			
+			else if(arg0.getSource() == mVoirXML){
+				System.out.append("\nVoir XML");
+				mOnglets.setSelectedIndex(0);
 			}
 		}
 	}
-
+	
+	class ButtonListener implements ActionListener {
+		JFrame mParent;
+		ButtonListener(JFrame f){
+			mParent=f;
+		}
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			System.out.println("actionPerformed="+arg0.getSource());
+			if(arg0.getSource() == buttonImage){
+				System.out.append("Img");
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode) mTree.getLastSelectedPathComponent();
+				if(node==null) return;
+				else if(node.getUserObject() instanceof String) return;
+				else if(node.getUserObject() instanceof Contact){
+					final JFileChooser fc = new JFileChooser();
+					int returnVal = fc.showOpenDialog(mParent);
+					if (returnVal == JFileChooser.APPROVE_OPTION) {
+			            File file = fc.getSelectedFile();
+			            System.out.append("Opening: " + file.getName() + ".\n");
+			            try {
+			            	Contact c=(Contact)node.getUserObject();
+			            	c.setIcon(file.getAbsolutePath());
+							inputImage=new ImageIcon(c.icon);
+							inputImage.getImage().flush();
+							inputLabelImage.setIcon(inputImage);
+			            	mTreeModel.reload();
+			            	mArea.setText(mTreeModel.toXML());
+						} catch (Exception e){}
+			        } else {
+			        	System.out.append("Open command cancelled by user.\n");
+			        }
+				}
+			}
+			else if(arg0.getSource() == buttonSubmit){
+				System.out.append("submit");
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode) mTree.getLastSelectedPathComponent();
+				if(node==null) return;
+				if(node.getUserObject() instanceof String) return;
+				if(node.getUserObject() instanceof Contact){
+					Contact c= (Contact)node.getUserObject();
+					c.nom=inputNom.getText();
+					c.mail=inputMail.getText();
+					//inputImage.setImage(c.icon);
+					mTreeModel.reload();
+					mArea.setText(mTreeModel.toXML());
+					
+				}
+			}
+		}
+	}
 	
 	public AppView() {
 		super();
@@ -176,12 +248,14 @@ public class AppView extends JFrame {
 		
 		//mFichier.addActionListener(new FichierListener(this));
 		mEditer.add(mAjouter);
+		mAjouter.addActionListener(new MenuListener(this));
 		mEditer.add(mVoirXML);
+		mVoirXML.addActionListener(new MenuListener(this));
 		mMenuBar.add(mEditer);
+		mVoirXML.addActionListener(new MenuListener(this));
 		
 		mTree=new JTree(root);
 		mTree.addTreeSelectionListener(new TreeSelectionListener() {
-			
 			@Override
 			public void valueChanged(TreeSelectionEvent arg0) {
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode) mTree.getLastSelectedPathComponent();
@@ -189,14 +263,19 @@ public class AppView extends JFrame {
 				else if(node.getUserObject() instanceof String){
 					inputNom.setText("");
 					inputMail.setText("");
-					//inputImage.setImage(null);
+					inputImage=new ImageIcon("");
+					inputImage.getImage().flush();
+					inputLabelImage.setIcon(inputImage);
 				}
 				else if(node.getUserObject() instanceof Contact){
 					Contact c= (Contact)node.getUserObject();
 					inputNom.setText(c.nom);
 					inputMail.setText(c.mail);
-					//inputImage.setImage(new Image(c.icon));
+					inputImage=new ImageIcon(c.getIcon());
+					inputImage.getImage().flush();
+					inputLabelImage.setIcon(inputImage);
 				}
+				
 				//System.out.printl(arg0.getSource();
 			}
 		});
@@ -220,31 +299,17 @@ public class AppView extends JFrame {
 		center.add(inputMail);
 		mPanel2.add(center, BorderLayout.CENTER);
 		
-		JPanel bottom = new JPanel();
-		JLabel image = new JLabel(inputImage);
-		bottom.add(image);
-		JButton button = new JButton("Image");
-		bottom.add(button);
 		
-		JButton submit = new JButton("Valider");
-		submit.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				DefaultMutableTreeNode node = (DefaultMutableTreeNode) mTree.getLastSelectedPathComponent();
-				if(node==null) return;
-				if(node.getUserObject() instanceof String) return;
-				if(node.getUserObject() instanceof Contact){
-					Contact c= (Contact)node.getUserObject();
-					c.nom=inputNom.getText();
-					c.mail=inputMail.getText();
-					//inputImage.setImage(new Image(c.icon));
-					mArea.setText(mTreeModel.toXML());
-					
-				}
-			}
-		});
-		bottom.add(submit);
+		JPanel bottom = new JPanel();
+		
+		//bottom.setLayout(new BorderLayout, BorderLayout.SOUTH);
+		bottom.add(inputLabelImage);
+		buttonImage.addActionListener(new ButtonListener(this));
+		bottom.add(buttonImage);
+		
+
+		buttonSubmit.addActionListener(new ButtonListener(this));
+		bottom.add(buttonSubmit);
 		mPanel2.add(bottom, BorderLayout.SOUTH);
 		
 		

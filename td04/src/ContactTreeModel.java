@@ -44,4 +44,5 @@ public class ContactTreeModel extends DefaultTreeModel{
 		
 		return xml.toString();	
 	}
+	
 }
