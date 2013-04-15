@@ -34,6 +34,6 @@ public class Contact {
 	}
 
 	public String infoToString(){
-		return "<nom>"+ nom + "</nom>\n<mail>" + mail +"</mail>\n<icone>"+ icon+ "</icone>";
+		return "<contact>\n<nom>"+ nom + "</nom>\n<mail>" + mail +"</mail>\n<icone>"+ icon+ "</icone>\n</contact>";
 	}
 }

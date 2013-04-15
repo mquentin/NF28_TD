@@ -10,6 +10,14 @@ import javax.swing.tree.TreePath;
 
 
 public class ContactTransferHandler extends TransferHandler {
+	protected AppView mAppView;
+	
+	
+	public ContactTransferHandler(AppView mAppView) {
+		super();
+		this.mAppView = mAppView;
+	}
+
 	public int getSourceActions(JComponent c){
 		return MOVE;
 	}
@@ -46,7 +54,8 @@ public class ContactTransferHandler extends TransferHandler {
 				JTree tree = (JTree)support.getComponent();
 				DefaultTreeModel tm = (DefaultTreeModel) tree.getModel();
 				parent.add(dmt);
-				tm.reload();
+				//tm.reload();
+				mAppView.reload_tree();
 				tree.expandPath(tp);
 				return true;
 			}catch(Exception ex) {
