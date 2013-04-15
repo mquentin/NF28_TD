@@ -1,0 +1,21 @@
+# TD1 : Image timer
+A priori ok
+
+
+# TD2 : Dictionnaire
+- Revoir le design
+- Utilisation de PropertyChangeListener
+
+
+# TD3, 4 & 5
+- Drag and drop d'un fichier xml vers la zone de texte (phase 3 du TD)
+- Quand le tree est rechargé, le noeud est déselectionné (ex : modification de l'image)
+
+
+# Prolongement
+A voir, cf pdf évaluation
+
+
+# Evaluation
+- Les applications doivent tourner en dehors d'Eclipse (à tester pour toutes)
+- Savoir expliquer l'implémentation (surtout pour le prolongement)
