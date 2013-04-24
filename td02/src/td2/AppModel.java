@@ -17,7 +17,6 @@ public class AppModel {
 	public AppModel(){
 		this.lwm = new ListWordModel<Definition>();
 		this.pcs = new PropertyChangeSupport(this);
-		
 	}
 	
 	public void openDictionnary(File f){
@@ -59,4 +58,5 @@ public class AppModel {
 	public ListWordModel getLwm(){
 		return this.lwm;
 	}
+
 }
