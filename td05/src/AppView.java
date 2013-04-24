@@ -61,16 +61,16 @@ public class AppView extends JFrame {
 	
 	JTabbedPane mOnglets=new JTabbedPane();
 	JPanel mPanel1 = new JPanel();
-	JPanel mPanel2 = new JPanel();
-	BoxLayout mOngletContact = new BoxLayout(mPanel2, BoxLayout.PAGE_AXIS);
+	JPanel mPanel2 = new JPanel(new BorderLayout());
+	//BoxLayout mOngletContact = new BoxLayout(mPanel2, BoxLayout.PAGE_AXIS);
 	
-	JTextField inputNom = new JTextField("");
-	JTextField inputMail = new JTextField("");
+	JTextField inputNom = new JTextField(15);
+	JTextField inputMail = new JTextField(15);
 	
 	ImageIcon inputImage = new ImageIcon("img3.jpg");
 	JLabel inputLabelImage = new JLabel(inputImage);
 	
-	JButton buttonImage = new JButton("Image");
+	JButton buttonImage = new JButton("Modifier l'image");
 	JButton buttonSubmit = new JButton("Valider");
 	
 	JTree mTree;
@@ -198,7 +198,8 @@ public class AppView extends JFrame {
 			            try {
 			            	Contact c=(Contact)node.getUserObject();
 			            	c.setIcon(file.getAbsolutePath());
-							inputImage=new ImageIcon(c.icon);
+							//inputImage=new ImageIcon(c.icon);
+			            	inputImage = new ImageIcon(new ImageIcon(c.icon).getImage().getScaledInstance(200, 200, Image.SCALE_DEFAULT));
 							inputImage.getImage().flush();
 							inputLabelImage.setIcon(inputImage);
 			            	//mTreeModel.reload();
@@ -230,11 +231,11 @@ public class AppView extends JFrame {
 	
 	public AppView() {
 		super();
-		this.setSize(700, 600);
+		this.setSize(700, 400);
 		this.setLayout(new BorderLayout());  
 		
 		mPanel1.setLayout(new FlowLayout(FlowLayout.LEFT)); 
-		mPanel2.setLayout(new FlowLayout(FlowLayout.LEFT)); 
+		//mPanel2.setLayout(new FlowLayout(FlowLayout.LEFT)); 
 		
 		Border border = BorderFactory.createEtchedBorder(EtchedBorder.RAISED);
 		  
@@ -277,7 +278,7 @@ public class AppView extends JFrame {
 					Contact c= (Contact)node.getUserObject();
 					inputNom.setText(c.nom);
 					inputMail.setText(c.mail);
-					inputImage=new ImageIcon(c.getIcon());
+					inputImage = new ImageIcon(new ImageIcon(c.icon).getImage().getScaledInstance(200, 200, Image.SCALE_DEFAULT));
 					inputImage.getImage().flush();
 					inputLabelImage.setIcon(inputImage);
 				}
@@ -291,29 +292,35 @@ public class AppView extends JFrame {
 		mPanel1.setPreferredSize(new Dimension(300, 300));
 		getContentPane().add(mPanel1, BorderLayout.WEST);
 		
-		mPanel2.setLayout(new BorderLayout());
+		//mPanel2.setLayout(new BorderLayout());
 		
 		JPanel top = new JPanel();
-		top.add(new JLabel("Nom"));
-		inputNom.setPreferredSize(new Dimension(200,20));
+		
+		top.setLayout(new BoxLayout(top, BoxLayout.PAGE_AXIS));
+		JLabel labelNom = new JLabel("Nom : ");
+		JLabel labelMail= new JLabel("Mail : ");
+		
+		
+		top.add(labelNom);
 		top.add(inputNom);
+		top.add(labelMail);
+		top.add(inputMail);
+
 		mPanel2.add(top, BorderLayout.NORTH);
 		
 		JPanel center = new JPanel();
-		center.add(new JLabel("Mail"));
-		inputMail.setPreferredSize(new Dimension(200,20));
-		center.add(inputMail);
+		
+		center.add(inputLabelImage);
+		buttonImage.addActionListener(new ButtonListener(this));
+		center.add(buttonImage);
+
 		mPanel2.add(center, BorderLayout.CENTER);
 		
 		
 		JPanel bottom = new JPanel();
 		
 		//bottom.setLayout(new BorderLayout, BorderLayout.SOUTH);
-		bottom.add(inputLabelImage);
-		buttonImage.addActionListener(new ButtonListener(this));
-		bottom.add(buttonImage);
 		
-
 		buttonSubmit.addActionListener(new ButtonListener(this));
 		bottom.add(buttonSubmit);
 		mPanel2.add(bottom, BorderLayout.SOUTH);
